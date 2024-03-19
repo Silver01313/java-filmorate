@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
-import ru.yandex.practicum.filmorate.exeption.AlreadyExistException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -13,8 +12,8 @@ import java.time.LocalDate;
 
 public class FilmValidationTests {
 
-    Film film;
-    FilmController filmController;
+    private Film film;
+    private FilmController filmController;
 
     @BeforeEach
     public void createFilmAndController() {
@@ -92,7 +91,7 @@ public class FilmValidationTests {
     public void shouldThrowExceptionIfFilmAlreadyExist() {
         film = film.toBuilder().id(1).build();
 
-        AlreadyExistException exception = assertThrows(AlreadyExistException.class, () -> filmController.create(film));
+        ValidationException exception = assertThrows(ValidationException.class, () -> filmController.create(film));
         assertEquals("Этот фильм уже зарегистрирован", exception.getMessage());
     }
 

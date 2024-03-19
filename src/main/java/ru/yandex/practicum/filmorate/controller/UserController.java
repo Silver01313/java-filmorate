@@ -1,14 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-<<<<<<< HEAD
-=======
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
->>>>>>> ba5aebd496d61f63f0a90664ea913d3e082e09a8
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exeption.AlreadyExistException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -18,13 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 @Controller
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    Map<Integer, User> users = new HashMap<>();
-    Integer userId = 0;
+    private final Map<Integer, User> users = new HashMap<>();
+    private Integer userId = 0;
 
     @GetMapping
     public List<User> findAll() {
@@ -32,13 +28,13 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) throws ValidationException, AlreadyExistException {
+    public User create(@RequestBody User user) throws ValidationException {
         int spaceIndex = user.getLogin().indexOf(" ");
         int atIndex = user.getEmail().indexOf("@");
 
         if (user.getId() != null) {
             log.warn("Такой пользователь уже существует");
-            throw new AlreadyExistException("Такой пользователь уже существует");
+            throw new ValidationException("Такой пользователь уже существует");
         }
         if (user.getName() == null) {
             user = user.toBuilder().name(user.getLogin()).build();
