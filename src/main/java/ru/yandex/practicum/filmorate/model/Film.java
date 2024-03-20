@@ -4,16 +4,16 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Value
+@Data
 @Builder(toBuilder = true)
 public class Film {
-    Integer id;
+    private final Integer id;
     @NonNull
-    String name;
+    private final String name;
     @NonNull
-    String description;
+    private final String description;
     @NonNull
-    LocalDate releaseDate;
+    private final LocalDate releaseDate;
     @NonNull
-    Integer duration;
+    private final Integer duration;
 }

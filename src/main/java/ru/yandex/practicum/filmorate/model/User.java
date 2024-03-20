@@ -1,20 +1,20 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.Value;
 
 import java.time.LocalDate;
 
-@Value
+@Data
 @Builder(toBuilder = true)
 public class User {
-    Integer id;
+    private final Integer id;
     @NonNull
-    String email;
+    private final String email;
     @NonNull
-    String login;
-    String name;
+    private final String login;
+    private final String name;
     @NonNull
-    LocalDate birthday;
+    private final LocalDate birthday;
 }
