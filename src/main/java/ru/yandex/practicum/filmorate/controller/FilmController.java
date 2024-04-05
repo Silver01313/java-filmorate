@@ -22,71 +22,50 @@ import java.util.Map;
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private Integer filmId = 0;
+
+    private final FilmService filmService;
+    private final FilmStorage filmStorage;
+
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+        this.filmStorage = filmService.getFilmStorage();
+    }
 
     @GetMapping
     public List<Film> findAll() {
-        return new ArrayList<>(films.values());
+        return filmStorage.findAll();
     }
 
     @PostMapping
     public Film create(@RequestBody Film film) throws ValidationException {
-        if (film.getId() != null) {
-            log.warn("Такой фильм уже существует");
-            throw new ValidationException("Этот фильм уже зарегистрирован");
-        }
-        if (film.getName().isBlank()) {
-            log.warn("Не корректное название");
-            throw new ValidationException("Название не может быть пустым");
-        }
-        if (film.getDescription().length() > 200) {
-            log.warn("Не корректное описание");
-            throw new ValidationException("Описание должно быть не длиннее 200 символов");
-        }
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.warn("Не корректная дата выхода");
-            throw new ValidationException("Дата выхода должна быть не ранее 28.12.1895г.");
-        }
-        if (film.getDuration() <= 0) {
-            log.warn("Не корректная продолжительность");
-            throw new ValidationException("Продолжительность фильма должна быть больше 0");
-        }
-        film = film.toBuilder().id(generateId()).build();
-        films.put(film.getId(), film);
-        log.debug("Вы добавили фильм : {}", film);
-        return film;
+        return filmStorage.create(film);
     }
 
     @PutMapping
     public Film update(@RequestBody Film film) throws ValidationException {
-        if (!films.containsKey(film.getId())) {
-            log.warn("Такого фильма не существует");
-            throw new ValidationException("Такого фильма не существует");
-        }
-        if (film.getName().isBlank()) {
-            log.warn("Не корректное название");
-            throw new ValidationException("Название не может быть пустым");
-        }
-        if (film.getDescription().length() > 200) {
-            log.warn("Не корректное описание");
-            throw new ValidationException("Описание должно быть не длиннее 200 символов");
-        }
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.warn("Не корректная дата выхода");
-            throw new ValidationException("Дата выхода должна быть не ранее 28.12.1895г.");
-        }
-        if (film.getDuration() <= 0) {
-            log.warn("Не корректная продолжительность");
-            throw new ValidationException("Продолжительность фильма должна быть больше 0");
-        }
-        log.debug("Вы добавили фильм : {}", film);
-        films.put(film.getId(), film);
-        return film;
+        return filmStorage.update(film);
     }
 
-    private Integer generateId() {
-        return ++filmId;
+    @GetMapping("/{id}")
+    public Film getFilm(@PathVariable Integer id) {
+        return filmStorage.getFilm(id);
+    }
+
+    @PutMapping("/{id}/like/{userId}")
+    public Integer addLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        return filmService.addLike(id, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public Integer removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        return filmService.removeLike(id, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularFilmsList(@RequestParam(value = "count",
+            defaultValue = "10", required = false) Integer count) {
+        return filmService.getPopularFilmsList(count);
     }
 
 }
