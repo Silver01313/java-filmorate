@@ -13,6 +13,5 @@ public interface UserStorage {
     User update(User user) throws ValidationException;
 
     List<User> findAll();
-    
     User getUser(Integer id);
 }
