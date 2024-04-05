@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
@@ -22,6 +21,7 @@ public class FilmValidationTests {
     private FilmController filmController;
     private FilmService filmService = new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage());
     private FilmStorage filmStorage = filmService.getFilmStorage();
+
     @BeforeEach
     public void createFilmAndController() {
         film = Film.builder()
