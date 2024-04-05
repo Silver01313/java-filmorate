@@ -49,8 +49,8 @@ public class UserService {
 
     public List<User> getFriends(Integer id) {
         try {
-            return userStorage.getUser(id).getFriends().stream().
-                    map(userStorage::getUser)
+            return userStorage.getUser(id).getFriends().stream()
+                    .map(userStorage::getUser)
                     .collect(Collectors.toList());
         } catch (NotFoundException e) {
             log.warn("Такого пользователя не существует");
