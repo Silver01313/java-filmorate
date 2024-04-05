@@ -1,14 +1,11 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.storage;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,21 +13,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Controller
 @Slf4j
-@RestController
-@RequestMapping("/films")
-public class FilmController {
+@Component
+public class InMemoryFilmStorage implements FilmStorage {
+
     private final Map<Integer, Film> films = new HashMap<>();
     private Integer filmId = 0;
 
-    @GetMapping
+    @Override
     public List<Film> findAll() {
+        log.debug("Список всех фильмов");
         return new ArrayList<>(films.values());
     }
 
-    @PostMapping
+    @Override
     public Film create(@RequestBody Film film) throws ValidationException {
         if (film.getId() != null) {
             log.warn("Такой фильм уже существует");
@@ -58,11 +54,11 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping
+    @Override
     public Film update(@RequestBody Film film) throws ValidationException {
         if (!films.containsKey(film.getId())) {
             log.warn("Такого фильма не существует");
-            throw new ValidationException("Такого фильма не существует");
+            throw new NotFoundException("Такого фильма не существует");
         }
         if (film.getName().isBlank()) {
             log.warn("Не корректное название");
@@ -85,8 +81,16 @@ public class FilmController {
         return film;
     }
 
+    @Override
+    public Film getFilm(Integer id) {
+        if (!films.containsKey(id)) {
+            log.warn("Такого фильма не существует");
+            throw new NotFoundException("Такого фильма не существует");
+        }
+        return films.get(id);
+    }
+
     private Integer generateId() {
         return ++filmId;
     }
-
 }

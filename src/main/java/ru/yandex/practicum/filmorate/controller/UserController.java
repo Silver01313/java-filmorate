@@ -2,16 +2,15 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Controller
@@ -19,74 +18,53 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final Map<Integer, User> users = new HashMap<>();
-    private Integer userId = 0;
+
+    private final UserService userService;
+    private final UserStorage userStorage;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+        this.userStorage = userService.getUserStorage();
+    }
 
     @GetMapping
     public List<User> findAll() {
-        return new ArrayList<>(users.values());
+        return userStorage.findAll();
     }
 
     @PostMapping
     public User create(@RequestBody User user) throws ValidationException {
-        int spaceIndex = user.getLogin().indexOf(" ");
-        int atIndex = user.getEmail().indexOf("@");
-
-        if (user.getId() != null) {
-            log.warn("Такой пользователь уже существует");
-            throw new ValidationException("Такой пользователь уже существует");
-        }
-        if (user.getName() == null) {
-            user = user.toBuilder().name(user.getLogin()).build();
-        }
-        if (atIndex < 0 || user.getEmail().isBlank()) {
-            log.warn("Не корректный электронный адрес");
-            throw new ValidationException("Электронный адрес не может быть пустым и должен содержать @");
-        }
-        if (spaceIndex >= 0 || user.getLogin().isBlank()) {
-            log.warn("Не корректный логин");
-            throw new ValidationException("Логин не может быть пустым и не должен содержать пробелы");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("Не корректная дата рождения");
-            throw new ValidationException("Не корректная дата рождения");
-        }
-        user = user.toBuilder().id(generateId()).build();
-        users.put(user.getId(), user);
-        log.debug("Вы добавили пользователя : {}", user);
-        return user;
+        return userStorage.create(user);
     }
 
     @PutMapping
     public User update(@RequestBody User user) throws ValidationException {
-        int spaceIndex = user.getLogin().indexOf(" ");
-        int atIndex = user.getEmail().indexOf("@");
-
-        if (!users.containsKey(user.getId())) {
-            log.warn("Такого пользователя не существует");
-            throw new ValidationException("Такого пользователя не существует");
-        }
-        if (user.getName() == null) {
-            user = user.toBuilder().name(user.getLogin()).build();
-        }
-        if (atIndex < 0 || user.getEmail().isBlank()) {
-            log.warn("Не корректный электронный адрес");
-            throw new ValidationException("Электронный адрес не может быть пустым и должен содержать @");
-        }
-        if (spaceIndex >= 0 || user.getLogin().isBlank()) {
-            log.warn("Не корректный логин");
-            throw new ValidationException("Логин не может быть пустым и не должен содержать пробелы");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("Не корректная дата рождения");
-            throw new ValidationException("Не корректная дата рождения");
-        }
-        log.debug("Вы добавили пользователя : {}", user);
-        users.put(user.getId(), user);
-        return user;
+        return userStorage.update(user);
     }
 
-    private Integer generateId() {
-        return ++userId;
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable Integer id) {
+        return userStorage.getUser(id);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public Integer addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        return userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public Integer deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        return userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getFriends(@PathVariable Integer id) {
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+        return userService.getCommonFriends(id, otherId);
     }
 }

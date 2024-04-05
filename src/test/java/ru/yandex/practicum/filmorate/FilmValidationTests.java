@@ -3,8 +3,14 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +20,8 @@ public class FilmValidationTests {
 
     private Film film;
     private FilmController filmController;
-
+    private FilmService filmService = new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage());
+    private FilmStorage filmStorage = filmService.getFilmStorage();
     @BeforeEach
     public void createFilmAndController() {
         film = Film.builder()
@@ -23,7 +30,7 @@ public class FilmValidationTests {
                 .releaseDate(LocalDate.of(2024, 03, 18))
                 .duration(90)
                 .build();
-        filmController = new FilmController();
+        filmController = new FilmController(filmService);
     }
 
     @Test
@@ -97,7 +104,7 @@ public class FilmValidationTests {
 
     @Test
     public void shouldThrowExceptionIfUpdateNonexistentFilm() {
-        ValidationException exception = assertThrows(ValidationException.class, () -> filmController.update(film));
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> filmController.update(film));
         assertEquals("Такого фильма не существует", exception.getMessage());
     }
 }
