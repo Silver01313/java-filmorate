@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UserValidationTest {
     private UserController userController;
     private User user;
-    private UserService userService = new UserService( new InMemoryUserStorage());
+    private UserService userService = new UserService(new InMemoryUserStorage());
 
     @BeforeEach
     public void createUserAndController() {
