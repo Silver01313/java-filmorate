@@ -76,5 +76,4 @@ public class UserService {
             throw new NotFoundException("Такого пользователя не существует");
         }
     }
-
 }
