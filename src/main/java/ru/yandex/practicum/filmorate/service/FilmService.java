@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
+import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -68,4 +69,21 @@ public class FilmService {
                 .limit(count)
                 .collect(Collectors.toList());
     }
+
+    public Film create(Film film) throws ValidationException {
+        return filmStorage.create(film);
+    }
+
+    public List<Film> findAll() {
+        return filmStorage.findAll();
+    }
+
+    public Film update(Film film) throws ValidationException {
+        return filmStorage.update(film);
+    }
+
+    public Film getFilm(Integer id) {
+        return filmStorage.getFilm(id);
+    }
+
 }

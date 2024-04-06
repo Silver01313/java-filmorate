@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
+import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -75,5 +76,21 @@ public class UserService {
             log.warn("Такого пользователя не существует");
             throw new NotFoundException("Такого пользователя не существует");
         }
+    }
+
+    public List<User> findAll() {
+        return userStorage.findAll();
+    }
+
+    public User create(User user) throws ValidationException {
+        return userStorage.create(user);
+    }
+
+    public User update(User user) throws ValidationException {
+        return userStorage.update(user);
+    }
+
+    public User getUser(Integer id) {
+        return userStorage.getUser(id);
     }
 }
