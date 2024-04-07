@@ -3,8 +3,11 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -14,10 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UserValidationTest {
     private UserController userController;
     private User user;
+    private UserService userService = new UserService(new InMemoryUserStorage());
 
     @BeforeEach
     public void createUserAndController() {
-        userController = new UserController();
+        userController = new UserController(userService);
         user = User.builder()
                 .email("@")
                 .login("a")
@@ -102,8 +106,7 @@ public class UserValidationTest {
 
     @Test
     public void shouldThrowExceptionIfUpdateNonexistentUser() {
-        ValidationException exception = assertThrows(ValidationException.class, () -> userController.update(user));
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> userController.update(user));
         assertEquals("Такого пользователя не существует", exception.getMessage());
     }
-
 }
