@@ -20,6 +20,11 @@ public class Film {
     private final LocalDate releaseDate;
     @NonNull
     private final Integer duration;
+    @NonNull
+    private final String filmRating;
+    @Builder.Default
+    private final Set<String> genre = new HashSet<>();
     @Builder.Default
     private final Set<Integer> likes = new HashSet<>();
+
 }

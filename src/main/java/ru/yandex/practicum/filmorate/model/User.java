@@ -21,6 +21,7 @@ public class User {
     private final String name;
     @NonNull
     private final LocalDate birthday;
+    boolean friendship;
     @Builder.Default
     private final Set<Integer> friends = new HashSet<>();
 }
