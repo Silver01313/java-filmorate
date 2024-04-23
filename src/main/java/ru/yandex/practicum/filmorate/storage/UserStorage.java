@@ -18,5 +18,5 @@ public interface UserStorage {
 
     Integer addFriend(Integer userId, Integer friendId);
 
-    Integer deleteFriend(Integer userId, Integer friend_id);
+    Integer deleteFriend(Integer userId, Integer friendId);
 }
