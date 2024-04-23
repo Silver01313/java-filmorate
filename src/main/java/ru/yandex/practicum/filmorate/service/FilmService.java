@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeption.NotFoundException;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +40,7 @@ public class FilmService {
         try {
             Set<Integer> likes = filmStorage.getFilm(filmId).getLikes();
             likes.add(userId);
+            filmStorage.addLike(filmId, userId);
         } catch (NotFoundException e) {
             log.warn("Такого фильма не существует");
             throw new NotFoundException("Такого фильма не существует");
@@ -70,7 +74,7 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    public Film create(Film film) throws ValidationException {
+    public Film create(Film film) throws ValidationException, InvocationTargetException {
         return filmStorage.create(film);
     }
 
@@ -86,4 +90,19 @@ public class FilmService {
         return filmStorage.getFilm(id);
     }
 
+    public List<Genre> getGenres() {
+        return filmStorage.getGenres();
+    }
+
+    public Genre getGenreById(Integer id) {
+        return filmStorage.getGenreById(id);
+    }
+
+    public List<Mpa> getMpa() {
+        return filmStorage.getMpa();
+    }
+
+    public Mpa getMpaById(Integer id) {
+        return filmStorage.getMpaById(id);
+    }
 }
