@@ -135,8 +135,8 @@ public class FilmDbStorage implements FilmStorage {
         while (filmRows.next()) {
             int id = filmRows.getInt("id");
             Film film = Film.builder()
-                    .id(id).
-                    name(Objects.requireNonNull(filmRows.getString("name")))
+                    .id(id)
+                    .name(Objects.requireNonNull(filmRows.getString("name")))
                     .description(Objects.requireNonNull(filmRows.getString("description")))
                     .releaseDate(Objects.requireNonNull(filmRows.getDate("releaseDate"))
                     .toLocalDate()).duration(filmRows.getInt("duration"))
