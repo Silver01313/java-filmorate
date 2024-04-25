@@ -221,5 +221,4 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sql, filmId, userId);
         return filmId;
     }
-
 }
