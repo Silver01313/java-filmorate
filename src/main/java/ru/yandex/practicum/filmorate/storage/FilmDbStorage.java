@@ -172,60 +172,6 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-    @Override
-    public List<Genre> getGenres() {
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM GENRE g ");
-        List<Genre> genreList = new ArrayList<>();
-        while (filmRows.next()) {
-            genreList.add(Genre.builder()
-                    .id(filmRows.getInt("id"))
-                    .name(Objects.requireNonNull(filmRows.getString("name")))
-                    .build());
-        }
-        return genreList;
-    }
-
-    @Override
-    public Genre getGenreById(Integer id) {
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM GENRE g WHERE id = ? ", id);
-        if (filmRows.next()) {
-            return Genre.builder()
-                    .id(filmRows.getInt("id"))
-                    .name(Objects.requireNonNull(filmRows.getString("name")))
-                    .build();
-        } else {
-            log.warn("Такого жанра не существует");
-            throw new NotFoundException("Такого жанра не существует");
-        }
-    }
-
-    @Override
-    public List<Mpa> getMpa() {
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM RATING r ");
-        List<Mpa> mpaList = new ArrayList<>();
-        while (filmRows.next()) {
-            mpaList.add(Mpa.builder()
-                    .id(filmRows.getInt("id"))
-                    .name(Objects.requireNonNull(filmRows.getString("name")))
-                    .build());
-        }
-        return mpaList;
-    }
-
-    @Override
-    public Mpa getMpaById(Integer id) {
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM RATING r WHERE id = ? ", id);
-        if (filmRows.next()) {
-            return Mpa.builder().id(filmRows.getInt("id"))
-                    .name(Objects.requireNonNull(filmRows.getString("name")))
-                    .build();
-
-        } else {
-            log.warn("Такого MPA не существует");
-            throw new NotFoundException("Такого MPA не существует");
-        }
-    }
-
     public Mpa getMpaByFilm(int filmId) {
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT f.FILMRATING_ID, r.NAME  FROM FILM f "
                 + "INNER JOIN RATING r ON F.FILMRATING_ID  = r.ID WHERE f.ID = ?", filmId);
