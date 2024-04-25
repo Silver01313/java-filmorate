@@ -93,26 +93,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public List<Genre> getGenres() {
-        return null;
-    }
-
-    @Override
-    public Genre getGenreById(Integer id) {
-        return null;
-    }
-
-    @Override
-    public List<Mpa> getMpa() {
-        return null;
-    }
-
-    @Override
-    public Mpa getMpaById(Integer id) {
-        return null;
-    }
-
-    @Override
     public Integer addLike(Integer filmId, Integer userId) {
         return null;
     }

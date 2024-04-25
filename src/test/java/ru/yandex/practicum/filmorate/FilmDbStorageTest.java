@@ -11,6 +11,8 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmDbStorage;
+import ru.yandex.practicum.filmorate.storage.GenreDbStorage;
+import ru.yandex.practicum.filmorate.storage.MpaDbStorage;
 import ru.yandex.practicum.filmorate.storage.UserDbStorage;
 
 import java.lang.reflect.InvocationTargetException;
@@ -71,13 +73,14 @@ public class FilmDbStorageTest {
 
     @Test
     public void testGetGenres() {
-        FilmDbStorage filmDbStorage = new FilmDbStorage(jdbcTemplate);
-        List<Genre> genreList = filmDbStorage.getGenres();
+        GenreDbStorage genreDbStorage = new GenreDbStorage(jdbcTemplate);
+
+        List<Genre> genreList = genreDbStorage.getGenres();
 
         assertThat(genreList.size())
                 .isEqualTo(6);
 
-        assertThat(filmDbStorage.getGenreById(1))
+        assertThat(genreDbStorage.getGenreById(1))
                 .isNotNull()
                 .usingRecursiveComparison()
                 .isEqualTo(Genre.builder().id(1).name("Комедия").build());
@@ -85,13 +88,13 @@ public class FilmDbStorageTest {
 
     @Test
     public void testGetMpa() {
-        FilmDbStorage filmDbStorage = new FilmDbStorage(jdbcTemplate);
-        List<Mpa> mpaList = filmDbStorage.getMpa();
+        MpaDbStorage mpaDbStorage = new MpaDbStorage(jdbcTemplate);
+        List<Mpa> mpaList = mpaDbStorage.getMpa();
 
         assertThat(mpaList.size())
                 .isEqualTo(5);
 
-        assertThat(filmDbStorage.getMpaById(1))
+        assertThat(mpaDbStorage.getMpaById(1))
                 .isNotNull()
                 .usingRecursiveComparison()
                 .isEqualTo(Mpa.builder().id(1).name("G"));
@@ -116,19 +119,19 @@ public class FilmDbStorageTest {
                 .birthday(LocalDate.of(1990, 1, 1))
                 .build();
         UserDbStorage userStorage = new UserDbStorage(jdbcTemplate);
-        userStorage.create(newUser);
+        newUser = userStorage.create(newUser);
 
         assertThat(newFilm.getLikes().size())
                 .isEqualTo(0);
 
-        filmDbStorage.addLike(newFilm.getId(),1);
+        filmDbStorage.addLike(newFilm.getId(),newUser.getId());
 
         newFilm = filmDbStorage.getFilm(newFilm.getId());
 
         assertThat(newFilm.getLikes().size())
                 .isEqualTo(1);
 
-        filmDbStorage.removeLike(newFilm.getId(),1);
+        filmDbStorage.removeLike(newFilm.getId(),newUser.getId());
 
         newFilm = filmDbStorage.getFilm(newFilm.getId());
 

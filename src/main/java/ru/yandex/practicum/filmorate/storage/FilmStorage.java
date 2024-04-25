@@ -3,8 +3,6 @@ package ru.yandex.practicum.filmorate.storage;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -18,14 +16,6 @@ public interface FilmStorage {
     List<Film> findAll();
 
     Film getFilm(Integer id);
-
-    public List<Genre> getGenres();
-
-    public Genre getGenreById(Integer id);
-
-    public List<Mpa> getMpa();
-
-    public Mpa getMpaById(Integer id);
 
     public Integer addLike(Integer filmId, Integer userId);
 
