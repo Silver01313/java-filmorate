@@ -13,7 +13,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class MpaDbStorage implements  MpaStorage{
+public class MpaDbStorage implements  MpaStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
