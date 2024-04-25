@@ -47,5 +47,5 @@ public class MpaDbStorage implements  MpaStorage{
             throw new NotFoundException("Такого MPA не существует");
         }
     }
-    
+
 }
