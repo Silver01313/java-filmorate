@@ -91,6 +91,16 @@ public class InMemoryUserStorage implements UserStorage {
         return users.get(id);
     }
 
+    @Override
+    public Integer addFriend(Integer userId, Integer friendId) {
+        return null;
+    }
+
+    @Override
+    public Integer deleteFriend(Integer userId, Integer friendId) {
+        return null;
+    }
+
     private Integer generateId() {
         return ++userId;
     }

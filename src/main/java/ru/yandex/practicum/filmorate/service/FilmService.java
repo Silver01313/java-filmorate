@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +38,7 @@ public class FilmService {
         try {
             Set<Integer> likes = filmStorage.getFilm(filmId).getLikes();
             likes.add(userId);
+            filmStorage.addLike(filmId, userId);
         } catch (NotFoundException e) {
             log.warn("Такого фильма не существует");
             throw new NotFoundException("Такого фильма не существует");
@@ -70,7 +72,7 @@ public class FilmService {
                 .collect(Collectors.toList());
     }
 
-    public Film create(Film film) throws ValidationException {
+    public Film create(Film film) throws ValidationException, InvocationTargetException {
         return filmStorage.create(film);
     }
 

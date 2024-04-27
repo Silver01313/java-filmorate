@@ -27,10 +27,7 @@ public class UserService {
 
     public Integer addFriend(Integer id, Integer friendId) {
         try {
-            Set<Integer> friends1 = userStorage.getUser(id).getFriends();
-            Set<Integer> friends2 = userStorage.getUser(friendId).getFriends();
-            friends1.add(friendId);
-            friends2.add(id);
+            userStorage.addFriend(id, friendId);
         } catch (NotFoundException e) {
             log.warn("Такого пользователя не существует");
             throw new NotFoundException("Такого пользователя не существует");
@@ -39,11 +36,7 @@ public class UserService {
     }
 
     public Integer deleteFriend(Integer id, Integer friendId) {
-        Set<Integer> friends1 = userStorage.getUser(id).getFriends();
-        Set<Integer> friends2 = userStorage.getUser(friendId).getFriends();
-
-        friends1.remove(friendId);
-        friends2.remove(id);
+        userStorage.deleteFriend(id, friendId);
         log.debug("Друг удален");
         return friendId;
     }

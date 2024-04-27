@@ -9,13 +9,14 @@ import ru.yandex.practicum.filmorate.exeption.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Getter
 @Controller
 @Slf4j
 @RestController
-@RequestMapping("/films")
+@RequestMapping
 public class FilmController {
 
     private final FilmService filmService;
@@ -25,40 +26,39 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @GetMapping
+    @GetMapping("/films")
     public List<Film> findAll() {
         return filmService.findAll();
     }
 
-    @PostMapping
-    public Film create(@RequestBody Film film) throws ValidationException {
+    @PostMapping("/films")
+    public Film create(@RequestBody Film film) throws ValidationException, InvocationTargetException {
         return filmService.create(film);
     }
 
-    @PutMapping
+    @PutMapping("/films")
     public Film update(@RequestBody Film film) throws ValidationException {
         return filmService.update(film);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/films/{id}")
     public Film getFilm(@PathVariable Integer id) {
         return filmService.getFilm(id);
     }
 
-    @PutMapping("/{id}/like/{userId}")
+    @PutMapping("/films/{id}/like/{userId}")
     public Integer addLike(@PathVariable Integer id, @PathVariable Integer userId) {
         return filmService.addLike(id, userId);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
+    @DeleteMapping("/films/{id}/like/{userId}")
     public Integer removeLike(@PathVariable Integer id, @PathVariable Integer userId) {
         return filmService.removeLike(id, userId);
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/films/popular")
     public List<Film> getPopularFilmsList(@RequestParam(value = "count",
             defaultValue = "10", required = false) Integer count) {
         return filmService.getPopularFilmsList(count);
     }
-
 }

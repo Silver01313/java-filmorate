@@ -90,6 +90,16 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.get(id);
     }
 
+    @Override
+    public Integer addLike(Integer filmId, Integer userId) {
+        return null;
+    }
+
+    @Override
+    public Integer removeLike(Integer filmId, Integer userId) {
+        return null;
+    }
+
     private Integer generateId() {
         return ++filmId;
     }
